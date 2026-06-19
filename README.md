@@ -336,3 +336,134 @@ The boolean is never printed directly. The ternary expression
 `active ? "Active" : "Inactive"` converts `true`/`false` into friendly,
 human-readable text before printing.
 
+
+
+---
+
+
+
+## Day 1 Exercise 03 - Add a CourseOffering Class
+
+### What Was Built
+
+A new `CourseOffering` class that represents **one scheduled run** of a
+`Course`. The `Course` is the reusable template (e.g. "Java Fundamentals"),
+while a `CourseOffering` is a specific intake of it (e.g. "Java Basics - June
+2026 Intake") with its own dates, capacity, instructor, and delivery mode.
+
+**Fields:** `offeringId`, `offeringName`, `course` (a `Course`),
+`instructor` (an `Instructor`), `startDate`, `endDate`, `capacity`, and the
+extension field `deliveryMode` (`Physical` / `Online` / `Hybrid`).
+
+**Methods:** a constructor, getters for every field, and
+`printOfferingSummary()`.
+
+In `Main.java` two `Course` objects, two `Instructor` objects, and two
+`CourseOffering` objects are created and printed.
+
+### `CourseOffering.java`
+
+```java
+package com.fullstack.demo;
+
+public class CourseOffering {
+    private String offeringId;
+    private String offeringName;
+    private Course course;
+    private Instructor instructor;
+    private String startDate;
+    private String endDate;
+    private int capacity;
+    private String deliveryMode; // Extension: Physical, Online, or Hybrid
+
+    public CourseOffering(String offeringId, String offeringName, Course course,
+            Instructor instructor, String startDate, String endDate,
+            int capacity, String deliveryMode) {
+        this.offeringId = offeringId;
+        this.offeringName = offeringName;
+        this.course = course;
+        this.instructor = instructor;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.capacity = capacity;
+        this.deliveryMode = deliveryMode;
+    }
+
+    public String getOfferingId() { return offeringId; }
+    public String getOfferingName() { return offeringName; }
+    public Course getCourse() { return course; }
+    public Instructor getInstructor() { return instructor; }
+    public String getStartDate() { return startDate; }
+    public String getEndDate() { return endDate; }
+    public int getCapacity() { return capacity; }
+    public String getDeliveryMode() { return deliveryMode; }
+
+    public void printOfferingSummary() {
+        System.out.println("Offering ID: " + offeringId);
+        System.out.println("Offering Name: " + offeringName);
+        System.out.println("Course: " + course.getTitle());
+        System.out.println("Instructor: " + instructor.getInstructorName());
+        System.out.println("Start Date: " + startDate);
+        System.out.println("End Date: " + endDate);
+        System.out.println("Capacity: " + capacity);
+        System.out.println("Delivery Mode: " + deliveryMode);
+    }
+}
+```
+
+### Example Output
+
+```text
+===== COURSE OFFERING 1 =====
+Offering ID: OFF001
+Offering Name: Java Basics - June 2026 Intake
+Course: Java Basics
+Instructor: Dr. Aisha Khan
+Start Date: 2026-06-19
+End Date: 2026-06-20
+Capacity: 25
+Delivery Mode: Physical
+
+===== COURSE OFFERING 2 =====
+Offering ID: OFF002
+Offering Name: React Fundamentals - July 2026 Intake
+Course: React Fundamentals
+Instructor: Aina Rahman
+Start Date: 2026-07-01
+End Date: 2026-07-03
+Capacity: 30
+Delivery Mode: Online
+```
+
+### Reflection: Why is `CourseOffering` more useful than only `Course`?
+
+A `Course` only describes a subject in the abstract — its title, level, and
+duration. In a real web application you do not enrol students into an idea;
+you enrol them into a **specific scheduled run** with concrete details that
+change every time the course is offered:
+
+- **Different dates and intakes.** The same "Java Fundamentals" course can run
+  in June, July, and September. Each run has its own start/end dates.
+- **Different instructors and capacity.** One intake might be taught by a
+  different instructor, be capped at 25 seats, or run Online instead of
+  Physical — while the underlying course definition stays the same.
+- **Avoids duplication.** Without `CourseOffering`, you would have to copy all
+  the course details (title, level, syllabus) for every single run. Instead,
+  many offerings *reference* one shared `Course`, so course content is defined
+  once and reused.
+- **Maps cleanly to a database and API.** Later in Spring Boot + MongoDB this
+  becomes a one-to-many relationship: one `courses` document linked to many
+  `courseOfferings` documents. Enrolments, schedules, and seat counts all
+  attach to the offering, not the course — which is exactly how real learning
+  platforms (and the upcoming capstone) model the domain.
+
+In short: `Course` answers *"what is taught"*, while `CourseOffering` answers
+*"when, by whom, how, and to how many"* — and a real application needs both.
+
+### Note on AI Assistance
+
+AI was used to help structure the `CourseOffering` class and explain the
+template-vs-instance modelling idea (Course as the template, CourseOffering as
+one scheduled run). The generated code was reviewed, compiled, and run to
+confirm it works before committing.
+
