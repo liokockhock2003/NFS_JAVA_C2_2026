@@ -31,17 +31,30 @@ public class CourseService {
                 .orElseThrow(() -> new CourseNotFoundException(courseId));
     }
     // public Course getCourseById(String courseId) {
-    //     Optional<Course> optionalCourse = courseRepository.findById(courseId);
-    //     if (optionalCourse.isPresent()) {
-    //         return optionalCourse.get();
-    //     } else {
-    //         throw new CourseNotFoundException(courseId);
-    //     }
+    // Optional<Course> optionalCourse = courseRepository.findById(courseId);
+    // if (optionalCourse.isPresent()) {
+    // return optionalCourse.get();
+    // } else {
+    // throw new CourseNotFoundException(courseId);
     // }
-    
+    // }
 
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
+    }
+
+    public List<Course> searchByTitle(String keyword) {
+        String safeKeyword = keyword == null ? "" : keyword.toLowerCase();
+        return courseRepository.findAll().stream()
+                .filter(course -> course.getTitle().toLowerCase().contains(safeKeyword))
+                .toList();
+    }
+
+    public List<Course> filterByLevel(String level) {
+        String safeLevel = level == null ? "" : level.toLowerCase();
+        return courseRepository.findAll().stream()
+                .filter(course -> course.getLevel().toLowerCase().equals(safeLevel))
+                .toList();
     }
 
     private void validateCourse(Course course) {
@@ -62,4 +75,3 @@ public class CourseService {
         }
     }
 }
-
