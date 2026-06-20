@@ -18,6 +18,7 @@ public class CourseServiceDemo {
         CourseRepository courseRepository = new InMemoryCourseRepository();
         CourseService courseService = new CourseService(courseRepository);
 
+        // --- Happy path: create / read / search / filter / assign instructor ---
         try {
             System.out.println("=== 1. Create Courses ===");
 
@@ -45,32 +46,51 @@ public class CourseServiceDemo {
 
             System.out.println("\n=== 5. Assign Instructor ===");
             Instructor instructor = new Instructor("I001", "Aina Rahman", "Backend Development");
-            Course updatedCourse = courseService.assignInstructor("C001", instructor);
-            updatedCourse.printSummary();
+            Course assignedCourse = courseService.assignInstructor("C001", instructor);
+            assignedCourse.printSummary();
 
             System.out.println("\n=== 6. Search by Instructor Name ===");
             List<Course> instructorResults = courseService.searchByInstructorName("Aina");
             printCourses(instructorResults);
 
-            System.out.println("\n=== 7. Update Duration ===");
-            Course durationUpdated = courseService.updateDuration("C001", 20);
-            durationUpdated.printSummary();
-
-            System.out.println("\n=== 8. Delete Course ===");
-            courseService.deleteCourse("C003");
-            printCourses(courseService.getAllCourses());
-
-            System.out.println("\n=== 9. Try to Find Deleted Course ===");
-            courseService.getCourseById("C003");
-
         } catch (InvalidCourseException e) {
             System.out.println("Validation error: " + e.getMessage());
-
         } catch (DuplicateCourseException e) {
             System.out.println("Duplicate course error: " + e.getMessage());
-
         } catch (CourseNotFoundException e) {
             System.out.println("Course not found error: " + e.getMessage());
+        }
+
+        // --- Assignment 03.6: Update and Delete ---
+
+        System.out.println("\n=== Update Duration ===");
+        Course durationUpdated = courseService.updateDuration("C001", 20);
+        System.out.println(durationUpdated.getCourseId() + " duration updated to "
+                + durationUpdated.getDurationHours() + " hours");
+
+        System.out.println("\n=== Delete Course ===");
+        courseService.deleteCourse("C003");
+        System.out.println("C003 deleted successfully");
+
+        System.out.println("\n=== Remaining Courses ===");
+        for (Course course : courseService.getAllCourses()) {
+            System.out.println(course.getCourseId() + " - " + course.getTitle());
+        }
+
+        // Try to find the deleted course (expected: CourseNotFoundException)
+        System.out.println("\n=== Find Deleted Course ===");
+        try {
+            courseService.getCourseById("C003");
+        } catch (CourseNotFoundException e) {
+            System.out.println("Course not found error: " + e.getMessage());
+        }
+
+        // Try to update a course with an invalid duration (expected: InvalidCourseException)
+        System.out.println("\n=== Invalid Duration Test ===");
+        try {
+            courseService.updateDuration("C001", 0);
+        } catch (InvalidCourseException e) {
+            System.out.println("Validation error: " + e.getMessage());
         }
     }
 
