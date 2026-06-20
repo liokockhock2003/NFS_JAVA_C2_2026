@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fullstack.demo.exception.InvalidCourseException;
 import com.fullstack.demo.model.Course;
+import com.fullstack.demo.model.Instructor;
 import com.fullstack.demo.repository.CourseRepository;
 import com.fullstack.demo.repository.InMemoryCourseRepository;
 import com.fullstack.demo.service.CourseService;
@@ -49,6 +50,23 @@ public class Main {
         // Filter by level (handled by CourseService.filterByLevel)
         printCourses("=== Filter by Level: Beginner ===", courseService.filterByLevel("Beginner"));
         printCourses("=== Filter by Level: Advanced ===", courseService.filterByLevel("Advanced"));
+
+        // Assign instructors to some courses (handled by CourseService.assignInstructor).
+        // Note: C003 is intentionally left without an instructor to prove the
+        // search does not crash on courses that have no instructor yet.
+        System.out.println("\n=== Assign Instructors ===");
+        Instructor alice = new Instructor("I001", "Alice Johnson", "Java Development");
+        Instructor bob = new Instructor("I002", "Bob Smith", "React Development");
+
+        courseService.assignInstructor("C001", alice);
+        courseService.assignInstructor("C004", alice);
+        courseService.assignInstructor("C002", bob);
+        System.out.println("Assigned Alice Johnson to C001, C004");
+        System.out.println("Assigned Bob Smith to C002");
+
+        // Search by instructor name (handled by CourseService.searchByInstructorName)
+        printCourses("=== Search by Instructor: alice ===", courseService.searchByInstructorName("alice"));
+        printCourses("=== Search by Instructor: bob ===", courseService.searchByInstructorName("bob"));
 
         // Checkpoint: try passing null into createCourse
         System.out.println("\n=== Invalid Course (null) ===");
