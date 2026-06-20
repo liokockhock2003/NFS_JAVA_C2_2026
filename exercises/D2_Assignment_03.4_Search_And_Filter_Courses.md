@@ -70,40 +70,6 @@ Java Fundamentals
 MongoDB Basics
 ```
 
-## Main Demo Task
-
-Update `CourseServiceDemo.java`.
-
-Create at least four courses.
-
-Example data:
-
-```text
-C001 - Java Fundamentals - Beginner
-C002 - React Frontend Development - Intermediate
-C003 - MongoDB Basics - Beginner
-C004 - Advanced Java Backend - Advanced
-```
-
-Test:
-
-1. Search by title using `"java"`
-2. Search by title using `"react"`
-3. Filter by level using `"Beginner"`
-4. Filter by level using `"Advanced"`
-
-## Suggested Demo Flow
-
-```text
-=== Search by Title: java ===
-C001 - Java Fundamentals
-C004 - Advanced Java Backend
-
-=== Filter by Level: Beginner ===
-C001 - Java Fundamentals
-C003 - MongoDB Basics
-```
-
 ## Learning Focus
 
 By completing this exercise, you should understand:
@@ -124,7 +90,4 @@ Your search and filter methods should not crash if the input is `null`.
 Submit:
 
 1. Updated `CourseService.java`
-2. Updated `CourseServiceDemo.java`
-3. Screenshot of search output
-4. Screenshot of filter output
-5. GitHub commit link or screenshot
+2. GitHub commit link or screenshot
