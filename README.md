@@ -138,3 +138,23 @@ The request travels through the layers like this:
 
 3. **`LinkedHashMap` (inside `InMemoryCourseRepository`)** - The repository looks the course up in its in-memory `LinkedHashMap` and returns it wrapped in an `Optional<Course>`. The service unwraps the `Optional` (or throws `CourseNotFoundException` if it is empty) and hands the `Course` back to the demo class.
 
+
+
+---
+
+
+
+## Day 3 Assignment 02 - Interface and Repository Storage Reflection
+
+
+
+**Question:** Why is `InMemoryCourseRepository` temporary storage? What would probably replace it later when we use MongoDB?
+
+
+
+`InMemoryCourseRepository` keeps every course inside a `LinkedHashMap` that lives in the computer's RAM. That memory only exists while the program is running, so as soon as the application stops (or restarts, or crashes) all of the saved courses are gone. There is no file or database behind it, so nothing is persisted. This makes it great for learning and quick testing, but not for real use.
+
+
+
+Later, when we use MongoDB, the `CourseRepository` interface stays the same, but the implementation will be replaced by something like a `MongoCourseRepository` (or a Spring Data `MongoRepository`). Instead of a `LinkedHashMap`, it will read and write courses to the MongoDB database, so the data survives restarts and can be shared across users and machines. Because the rest of the code depends on the `CourseRepository` interface (not the concrete class), we can swap in the MongoDB implementation without changing the service or demo code.
+
