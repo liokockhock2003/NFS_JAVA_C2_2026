@@ -158,3 +158,31 @@ The request travels through the layers like this:
 
 Later, when we use MongoDB, the `CourseRepository` interface stays the same, but the implementation will be replaced by something like a `MongoCourseRepository` (or a Spring Data `MongoRepository`). Instead of a `LinkedHashMap`, it will read and write courses to the MongoDB database, so the data survives restarts and can be shared across users and machines. Because the rest of the code depends on the `CourseRepository` interface (not the concrete class), we can swap in the MongoDB implementation without changing the service or demo code.
 
+
+
+---
+
+
+
+## Day 3 Assignment 03 - Exception Handling Reflection
+
+
+
+**Question:** Why is throwing `CourseNotFoundException` better than printing inside `CourseService`?
+
+
+
+If `CourseService` printed `"Course not found"` itself, it would force one fixed reaction on every caller, and the service has no idea who is calling it. The same missing-course situation needs to be shown differently depending on the caller:
+
+
+
+* A **console app** wants to print a friendly line to the terminal.
+
+* A **web API** wants to return an HTTP status (such as `404 Not Found`) with a JSON error body.
+
+* A **frontend app** wants to show a styled error message or popup to the user.
+
+
+
+By **throwing** `CourseNotFoundException`, the service simply reports "this course does not exist" and stays focused on business logic. The caller then **catches** the exception and decides how to display it. This keeps the service reusable across console, web, and frontend layers, avoids mixing presentation code into the business layer, and means a missing course can never silently slip past - the caller must handle it.
+
