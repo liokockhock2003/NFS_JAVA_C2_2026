@@ -236,3 +236,31 @@ By that stricter definition, our relationships are actually **aggregation, not s
 
 So the design above is best described as **aggregation (weak composition)**: one course can have many offerings, and instructors and courses are shared, independently-living objects rather than parts owned by a single whole.
 
+
+
+---
+
+
+
+## Day 3 Assignment 05 - Loop Search vs Stream Search Reflection
+
+
+
+**Question:** Which version is easier to understand: loop or stream? Why?
+
+
+
+The **loop** version is usually easier to understand when you are starting out, because every step is written out explicitly: create an empty results list, go through each course one at a time, check the condition with an `if`, add the matches, and return the list. You can see exactly *how* the work happens, which makes it easy to read line by line and to debug.
+
+
+
+The **stream** version (`stream().filter(...).toList()`) is shorter and reads more like a sentence - "from all courses, keep the ones whose level matches, then collect them into a list." Once you are comfortable with it, it is easier to write and to read because it describes *what* you want, not *how* to build the list. It hides the loop, the temporary `ArrayList`, and the `add()` calls. So: the loop is easier for a beginner to follow step by step, while the stream is easier and cleaner once the idea clicks. Both produce the exact same result.
+
+
+
+**Question:** What does `filter()` do in a stream?
+
+
+
+`filter()` keeps only the elements that pass a test and drops the rest. You give it a condition (a boolean expression). For each element, the condition runs: if it returns `true`, the element stays in the stream; if it returns `false`, the element is removed. In our search, `filter(course -> course.getLevel().equalsIgnoreCase(safeLevel))` keeps only the courses whose level matches, which is exactly what the `if` statement did inside the loop version.
+

@@ -118,6 +118,52 @@ public class CourseService {
         courseRepository.deleteById(courseId);
     }
 
+    // Day 3 Assignment 05 - Search by level using a normal loop.
+    public List<Course> searchByLevelUsingLoop(String level) {
+        String safeLevel = level == null ? "" : level.trim();
+
+        List<Course> results = new ArrayList<>();
+
+        for (Course course : courseRepository.findAll()) {
+            if (course.getLevel().equalsIgnoreCase(safeLevel)) {
+                results.add(course);
+            }
+        }
+
+        return results;
+    }
+
+    // Day 3 Assignment 05 (Task D) - Same search written using a stream.
+    public List<Course> searchByLevelUsingStream(String level) {
+        String safeLevel = level == null ? "" : level.trim();
+
+        return courseRepository.findAll()
+                .stream()
+                .filter(course -> course.getLevel().equalsIgnoreCase(safeLevel))
+                .toList();
+    }
+
+    // Day 3 Assignment 05 (Task E) - Courses with durationHours >= minimumHours, using a loop.
+    public List<Course> searchByMinimumDurationUsingLoop(int minimumHours) {
+        List<Course> results = new ArrayList<>();
+
+        for (Course course : courseRepository.findAll()) {
+            if (course.getDurationHours() >= minimumHours) {
+                results.add(course);
+            }
+        }
+
+        return results;
+    }
+
+    // Day 3 Assignment 05 (Task E) - Same duration search written using a stream.
+    public List<Course> searchByMinimumDurationUsingStream(int minimumHours) {
+        return courseRepository.findAll()
+                .stream()
+                .filter(course -> course.getDurationHours() >= minimumHours)
+                .toList();
+    }
+
     private void validateCourse(Course course) {
         if (course == null) {
             throw new InvalidCourseException("Course cannot be null.");
