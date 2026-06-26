@@ -186,3 +186,53 @@ If `CourseService` printed `"Course not found"` itself, it would force one fixed
 
 By **throwing** `CourseNotFoundException`, the service simply reports "this course does not exist" and stays focused on business logic. The caller then **catches** the exception and decides how to display it. This keeps the service reusable across console, web, and frontend layers, avoids mixing presentation code into the business layer, and means a missing course can never silently slip past - the caller must handle it.
 
+
+
+---
+
+
+
+## Day 3 Assignment 04 - Object Relationships and Composition Reflection
+
+
+
+**Question:** Why is `CourseOffering` a better design than putting start date, end date, and capacity directly inside `Course`?
+
+
+
+A `Course` describes the *subject* itself - its title, duration, and level - things that stay the same no matter when it runs. The start date, end date, and capacity belong to a *specific run* of that course, not to the course as a whole. Putting them inside `Course` would mean each course could only ever have one schedule and one class size.
+
+
+
+By giving those scheduling details their own class, `CourseOffering`, we can run the same `Course` many times with different dates, instructors, capacities, and delivery modes (for example a June intake and a July weekend intake of "Java Fundamentals"). `CourseOffering` uses a **HAS-A** relationship - it *has a* `Course` and *has an* `Instructor` by holding the real objects rather than copying their text fields, so any update to the course is reflected everywhere it is offered. This keeps each class focused on one responsibility and models the real world correctly: one course, many offerings.
+
+
+
+### A note on composition vs aggregation
+
+
+
+"Composition" is often used loosely to mean any HAS-A relationship, but there are two stricter flavours that differ by **ownership and lifetime**:
+
+
+
+* **Composition (strong HAS-A)** - the whole *owns* the part, creates it internally, and the part dies with the whole. There is no setter and the part is never shared (e.g. a `Course` that builds and solely owns its own `Syllabus`).
+
+* **Aggregation (weak HAS-A)** - the whole only *refers to* a part that is created outside, lives independently, and can be shared by many wholes.
+
+
+
+By that stricter definition, our relationships are actually **aggregation, not strong composition**:
+
+
+
+* `Course HAS-A Instructor`, `CourseOffering HAS-A Course`, and `CourseOffering HAS-A Instructor` are all aggregation.
+
+* The objects are created outside and passed in (`new Instructor(...)` then `setInstructor(...)` / passed into the `CourseOffering` constructor).
+
+* The same `Instructor` object (Mike) is **shared** across `javaCourse`, `OFF001`, and `OFF003`, and an `Instructor` still exists even if a course or offering is deleted - their lifetimes are independent.
+
+
+
+So the design above is best described as **aggregation (weak composition)**: one course can have many offerings, and instructors and courses are shared, independently-living objects rather than parts owned by a single whole.
+
