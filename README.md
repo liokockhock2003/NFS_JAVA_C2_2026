@@ -110,3 +110,31 @@ Participants may use AI tools to:
 
 Participants must always review, verify, test, and understand any AI-generated output. No passwords, API keys, tokens, private keys, or confidential data should be placed into AI prompts.
 
+
+
+---
+
+
+
+## Day 3 Assignment 01 - Code Flow Reflection
+
+
+
+**Question:** When `getCourseById("C004")` is called, which file does the request go to first, second, and third?
+
+
+
+The request travels through the layers like this:
+
+
+
+1. **`CourseService.java`** - The demo class (`CodeFlowPractice`) calls the service first. The service owns the business logic, so every request goes through it before touching storage.
+
+
+
+2. **`InMemoryCourseRepository.java`** - The service calls `courseRepository.findById("C004")`. The `CourseRepository` interface defines the contract, but the actual code that runs is its `InMemoryCourseRepository` implementation.
+
+
+
+3. **`LinkedHashMap` (inside `InMemoryCourseRepository`)** - The repository looks the course up in its in-memory `LinkedHashMap` and returns it wrapped in an `Optional<Course>`. The service unwraps the `Optional` (or throws `CourseNotFoundException` if it is empty) and hands the `Course` back to the demo class.
+
