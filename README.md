@@ -264,3 +264,41 @@ The **stream** version (`stream().filter(...).toList()`) is shorter and reads mo
 
 `filter()` keeps only the elements that pass a test and drops the rest. You give it a condition (a boolean expression). For each element, the condition runs: if it returns `true`, the element stays in the stream; if it returns `false`, the element is removed. In our search, `filter(course -> course.getLevel().equalsIgnoreCase(safeLevel))` keeps only the courses whose level matches, which is exactly what the `if` statement did inside the loop version.
 
+
+
+---
+
+
+
+## Day 3 Assignment 06 - StudentService Reflection
+
+
+
+**Question:** How is `StudentService` similar to `CourseService`?
+
+
+
+`StudentService` is built on the **same layered pattern** as `CourseService` - only the model changes:
+
+
+
+* It depends on an **interface** (`StudentRepository`) rather than a concrete class, and receives it through the constructor (dependency injection), exactly like `CourseService` receives a `CourseRepository`.
+
+* It **stores no data itself**; it delegates all saving and finding to the repository, keeping storage out of the service.
+
+* It holds the **business logic**: `registerStudent()` checks for `null` and duplicates before saving (mirroring `createCourse()`), and `getStudentById()` returns the student or **throws** a custom exception (`StudentNotFoundException`) the same way `getCourseById()` throws `CourseNotFoundException`.
+
+* It offers the same kind of read/search methods - `getAllStudents()` and `searchByNameUsingLoop()` (plus a stream version) - matching `getAllCourses()` and the course search methods.
+
+
+
+In short, once you understand `CourseService`, `StudentService` is the identical structure (model -> repository interface -> in-memory implementation -> service -> custom exception) applied to a different entity.
+
+
+
+**Question:** Which file stores students temporarily while the program is running?
+
+
+
+`InMemoryStudentRepository` stores the students temporarily. It keeps them in a `LinkedHashMap` that lives in the computer's memory (RAM), so the data only exists while the program is running and is lost when it stops. The `StudentRepository` interface just declares the actions, and `StudentService` only uses them - it never stores anything itself.
+
