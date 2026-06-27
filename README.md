@@ -196,3 +196,69 @@ Arrow functions are everywhere in React, so being comfortable with them first ma
 
 In short, React code is full of small functions passed as props, callbacks, and hook arguments - and arrow functions are the natural, concise way to write them. Learning them first means the React syntax will already feel familiar.
 
+
+
+---
+
+
+
+## Day 4 Exercise 04 - JavaScript Array Methods Reflection
+
+
+
+**1. What is the difference between `filter`, `find`, and `map`?**
+
+
+
+All three read the original array without changing it, but they return different things:
+
+
+
+* **`filter`** keeps every item that passes a test and returns a **new array** of all the matches (e.g. all Active students). It can return many items, or an empty array.
+
+* **`find`** returns the **first single item** that passes a test (one object), or `undefined` if nothing matches. It stops at the first hit.
+
+* **`map`** transforms **every** item and returns a **new array of the same length**, where each element has been changed (e.g. turning student objects into just their email strings).
+
+
+
+Quick way to remember: `filter` = "give me the matching items", `find` = "give me the first matching item", `map` = "give me a changed version of every item".
+
+
+
+**2. Which four array methods change the original array?**
+
+
+
+`push`, `pop`, `shift`, and `unshift`. (By contrast `forEach`, `filter`, `find`, and `map` do not change the original array.)
+
+
+
+**3. What does `push` return?**
+
+
+
+The **new length** of the array after the item is added to the end (a number).
+
+
+
+**4. What does `pop` return?**
+
+
+
+The **item that was removed** from the end of the array (the removed object itself), not the length.
+
+
+
+**5. What is the difference between `shift` and `unshift`?**
+
+
+
+They both work at the **beginning** of the array but do opposite things:
+
+
+
+* **`shift`** **removes** the first item and returns that **removed item**.
+
+* **`unshift`** **adds** one or more items to the front and returns the **new length** of the array.
+
