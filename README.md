@@ -134,3 +134,33 @@ A JavaScript object needs **no class at all** - you can create one directly as a
 
 In short: a Java object is built from a predefined, type-checked class blueprint, while a JavaScript object can be created on the fly with no class and changed freely while the program runs.
 
+
+
+---
+
+
+
+## Day 4 Exercise 02 - JavaScript Array vs Java ArrayList Reflection
+
+
+
+**Question:** How is a JavaScript array similar to a Java `ArrayList`?
+
+
+
+A JavaScript array (`const instructors = []`) and a Java `ArrayList` are similar because both are **resizable, ordered lists** rather than fixed-size arrays:
+
+
+
+* **They grow and shrink dynamically** - you do not set a size up front. JavaScript uses `push()`/`pop()`, while `ArrayList` uses `add()`/`remove()`.
+
+* **They keep insertion order** and let you access elements **by index** (`instructors[0]` in JS, `list.get(0)` in Java).
+
+* **They track their own size** - JavaScript uses the `.length` property and `ArrayList` uses the `.size()` method.
+
+* **Both can be looped the same way** - `for...of` in JavaScript is like the enhanced `for (Instructor i : list)` loop in Java.
+
+
+
+The main difference is typing: a Java `ArrayList<Instructor>` can only hold `Instructor` objects (checked by the compiler), while a JavaScript array is untyped and can hold values of any type mixed together. But in everyday use - a dynamic, ordered, index-accessible collection you can loop over and count - they play the same role.
+
