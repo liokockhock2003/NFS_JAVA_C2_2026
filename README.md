@@ -324,3 +324,51 @@ In short, the DOM lets JavaScript **read and change a web page while it is runni
 
 Because `filter` does not modify the original `students` array, the **Reset** button can simply re-render the complete list again. So `filter` is the engine of the search: it turns the user's keyword into the subset of data that should be displayed, and the DOM code just renders whatever array `filter` hands back.
 
+
+
+---
+
+
+
+## Day 4 Exercise 07 - Fetch Local JSON Reflection
+
+
+
+**1. What does `async` mean?**
+
+
+
+`async` marks a function as one that contains work which may take time to finish (like loading a file or calling an API). It lets the function pause and wait without freezing the rest of the page, and it allows the use of `await` inside it. An `async` function always returns a Promise.
+
+
+
+**2. What does `await` do?**
+
+
+
+`await` tells JavaScript to **pause inside the async function until a task finishes**, then continue with the result. For example `const response = await fetch("students.json")` waits for the file to come back before moving to the next line, so we never try to use the data before it has actually arrived.
+
+
+
+**3. What does `fetch` do?**
+
+
+
+`fetch` **requests data** from a file or a URL and returns a Promise that resolves to a `Response` object. In this exercise `fetch("students.json")` requests the local JSON file; we then call `response.json()` to turn the raw JSON text into a real JavaScript array of objects.
+
+
+
+**4. Why do we use `fetch` before connecting to a real backend API?**
+
+
+
+Because the code is almost identical either way. Loading a local file with `fetch("students.json")` uses the same `async`/`await`/`try`-`catch` pattern we will later use for `fetch("http://localhost:8080/api/students")`. Practising on a local JSON file lets us learn how requesting, awaiting, converting, and rendering data works **without needing a running server or database yet** - so when the Spring Boot backend is ready, only the URL changes.
+
+
+
+**5. Why should this exercise be run using Live Server?**
+
+
+
+Because `fetch` needs the page to be served over **HTTP**. Live Server runs a small local web server (e.g. `http://127.0.0.1:5500`), so the browser is allowed to request `students.json`. If you instead double-click the HTML file, it opens with a `file://` path, and browsers block `fetch` of local files for security reasons - so the request would fail with a CORS/blocked-file error and no students would load.
+
