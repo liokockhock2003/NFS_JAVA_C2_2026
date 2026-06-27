@@ -262,3 +262,35 @@ They both work at the **beginning** of the array but do opposite things:
 
 * **`unshift`** **adds** one or more items to the front and returns the **new length** of the array.
 
+
+
+---
+
+
+
+## Day 4 Exercise 05 - DOM Rendering Reflection
+
+
+
+**Question:** What does the DOM allow JavaScript to do?
+
+
+
+The **DOM (Document Object Model)** is a live, in-memory representation of the HTML page, structured as a tree of objects (one object per element). It is the bridge between JavaScript and what the user sees in the browser, and it lets JavaScript:
+
+
+
+* **Find/select elements** on the page - for example `document.getElementById("student-list")` grabs the `<div>` so we can work with it.
+
+* **Create new elements** - `document.createElement("div")` builds a brand-new card that did not exist in the original HTML.
+
+* **Change content and attributes** - setting `card.innerHTML = "..."` fills the card with the student's details, and we can also change styles, classes, and text.
+
+* **Add or remove elements from the page** - `appendChild()` inserts each card into the page so it actually appears; elements can also be removed.
+
+* **Respond to user actions** - JavaScript can attach event listeners (clicks, typing, etc.) to DOM elements to make the page interactive.
+
+
+
+In short, the DOM lets JavaScript **read and change a web page while it is running**, so a page can be built and updated dynamically from data (like turning a `students` array into a list of cards) instead of being fixed, static HTML. This same idea - data driving what appears on screen - is exactly what React builds on later.
+
