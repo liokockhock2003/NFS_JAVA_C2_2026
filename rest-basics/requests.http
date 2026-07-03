@@ -36,3 +36,75 @@ Content-Type: application/json
   "startDate": "",
   "capacity": 0
 }
+
+
+###############################################
+# Day 5 Final Exercise - Booking endpoints
+###############################################
+
+### B1. Get all bookings (empty [] before any are created) - 200
+GET http://localhost:8081/api/bookings
+
+
+### B2. Create a valid booking - 201 (reduces EV001 seats by 2)
+POST http://localhost:8081/api/bookings
+Content-Type: application/json
+
+{
+  "eventId": "EV001",
+  "participantName": "Rahim Gonzalez",
+  "participantEmail": "rahim@example.com",
+  "seats": 2
+}
+
+
+### B3. Get one booking by ID - 200 (run B2 first so BK001 exists)
+GET http://localhost:8081/api/bookings/BK001
+
+
+### B4. Create a booking with missing fields - 400 validation failed
+POST http://localhost:8081/api/bookings
+Content-Type: application/json
+
+{
+  "eventId": "",
+  "participantName": "",
+  "participantEmail": "",
+  "seats": 0
+}
+
+
+### B5. Create a booking with an invalid event ID - 404 event not found
+POST http://localhost:8081/api/bookings
+Content-Type: application/json
+
+{
+  "eventId": "EV999",
+  "participantName": "Rahim Gonzalez",
+  "participantEmail": "rahim@example.com",
+  "seats": 2
+}
+
+
+### B6. Create a booking with too many seats - 400 not enough seats
+POST http://localhost:8081/api/bookings
+Content-Type: application/json
+
+{
+  "eventId": "EV002",
+  "participantName": "Rahim Gonzalez",
+  "participantEmail": "rahim@example.com",
+  "seats": 100
+}
+
+
+### B7. Get one booking that does not exist - 404
+GET http://localhost:8081/api/bookings/BK999
+
+
+### B8. Challenge - cancel a booking - 200 (status CANCELLED, seats returned)
+DELETE http://localhost:8081/api/bookings/BK001
+
+
+### B9. Check event seats after booking/cancelling - 200
+GET http://localhost:8081/api/events
