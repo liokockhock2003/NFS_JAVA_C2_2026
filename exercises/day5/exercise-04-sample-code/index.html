@@ -1,18 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Event Browser</title>
 </head>
+
 <body>
-<h1>Available Events</h1>
+    <h1>Available Events</h1>
 
-<button id="loadButton">Load Events</button>
+    <button id="loadButton">Load Events</button>
 
-<p id="statusText">No request sent yet.</p>
+    <p id="statusText">No request sent yet.</p>
 
-<ul id="eventList"></ul>
+    <ul id="eventList"></ul>
 
-<script src="app.js"></script>
+    <!-- Challenge task: search for one event by ID -->
+    <h2>Find an Event by ID</h2>
+    <input id="eventIdInput" type="text" placeholder="e.g. EV001">
+    <button id="searchButton">Search</button>
+
+    <p id="searchStatusText"></p>
+
+    <ul id="searchResult"></ul>
+
+    <script src="app.js"></script>
 </body>
+
 </html>
+
+<!-- Run node rest-basics/mock-server.js in order to start the mock server -->
