@@ -1,11 +1,11 @@
 package com.example.assettracker.controller;
 
+import com.example.assettracker.dto.CreateTicketRequest;
 import com.example.assettracker.dto.TicketResponse;
 import com.example.assettracker.service.TicketService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +27,11 @@ public class TicketController {
     @GetMapping("/{id}")
     public TicketResponse getTicketById(@PathVariable String id) {
         return ticketService.getTicketById(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public TicketResponse createTicket(@Valid @RequestBody CreateTicketRequest request) {
+        return ticketService.createTicket(request);
     }
 }
