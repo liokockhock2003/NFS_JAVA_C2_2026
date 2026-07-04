@@ -1,0 +1,63 @@
+### =========================================
+### Day 6 - Support Desk API Tests
+### Base URL
+@baseUrl = http://localhost:8080
+
+### =========================================
+### 1. Health Endpoint
+GET {{baseUrl}}/api/health
+
+###
+
+### =========================================
+### 2. About Endpoint
+GET {{baseUrl}}/api/about
+
+###
+
+### =========================================
+### 3. Get All Tickets
+GET {{baseUrl}}/api/tickets
+
+###
+
+### =========================================
+### 4. Get Existing Ticket
+# Replace 1 with an actual ticket ID if different
+GET {{baseUrl}}/api/tickets/1
+
+###
+
+### =========================================
+### 5. Get Missing Ticket
+GET {{baseUrl}}/api/tickets/9999
+
+###
+
+### =========================================
+### 6. Create Valid Ticket
+POST {{baseUrl}}/api/tickets
+Content-Type: application/json
+
+{
+  "title": "Cannot login",
+  "description": "Unable to login after password reset",
+  "category": "Authentication",
+  "priority": "HIGH",
+  "createdBy": "Lio"
+}
+
+###
+
+### =========================================
+### 7. Create Invalid Ticket
+POST {{baseUrl}}/api/tickets
+Content-Type: application/json
+
+{
+  "title": "",
+  "description": "",
+  "category": "",
+  "priority": "",
+  "createdBy": ""
+}

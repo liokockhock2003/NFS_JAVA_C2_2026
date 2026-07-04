@@ -21,4 +21,12 @@ public class HealthController {
                 "status", "UP",
                 "service", "asset-tracker-api");
     }
+
+    @GetMapping("/api/about")
+    public Map<String, String> about() {
+        return Map.of(
+                "appName", "Support Desk API",
+                "version", "1.0.0",
+                "description", "API for managing IT support tickets");
+    }
 }
