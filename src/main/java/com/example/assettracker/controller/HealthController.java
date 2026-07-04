@@ -19,7 +19,6 @@ public class HealthController {
         // Returning a small JSON object. Spring MVC converts Map -> JSON automatically.
         return Map.of(
                 "status", "UP",
-                "service", "asset-tracker-api"
-        );
+                "service", "asset-tracker-api");
     }
 }
