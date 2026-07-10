@@ -103,3 +103,14 @@ The controller receives requests.
 The service handles application logic.
 
 The repository talks to MongoDB.
+
+---
+
+## Verification Note
+
+I confirmed the data came from MongoDB, not an in-memory list, in a few ways:
+
+1. **The returned `id` is a real MongoDB ObjectId.** `GET /api/tickets` returned `"id": "6a508bce8515f64f3689e4e0"` — a 24-character hex ObjectId generated automatically by MongoDB. No `id` value like this is ever assigned anywhere in the Java code, so it could only have come from the database itself.
+2. **The document content matches what I inserted manually via `mongosh`,** not the old hardcoded sample data from the Day 6 in-memory `TicketService` (`T001`, `title: "Cannot access email"`). The title, description, and `createdBy` fields returned by the API exactly match the document I inserted with `db.tickets.insertOne(...)` in Day 7 Exercise 1.
+3. **The startup log shows a real, authenticated connection to MongoDB** — the Mongo driver logged `MongoClient ... credential=MongoCredential{... userName='support_desk_app', source='support_desk_db' ...}` and `Monitor thread successfully connected to server ... CONNECTED, ok=true` when the app started.
+4. **`GET /api/tickets/000000000000000000000000` (a well-formed but non-existent ObjectId) correctly returns 404.** This only makes sense if the lookup is a real `findById` query against the database — that string was never part of any hardcoded ticket list.

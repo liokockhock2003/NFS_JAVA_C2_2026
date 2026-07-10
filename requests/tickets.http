@@ -1,0 +1,14 @@
+### Health check
+GET http://localhost:8080/api/health
+
+
+### Get all tickets from MongoDB
+GET http://localhost:8080/api/tickets
+
+
+### Get one ticket
+GET http://localhost:8080/api/tickets/6a508bce8515f64f3689e4e0
+
+
+### Get missing ticket
+GET http://localhost:8080/api/tickets/000000000000000000000000
