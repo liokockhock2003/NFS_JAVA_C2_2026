@@ -40,3 +40,18 @@ Submit a short note containing:
 2. The ID of the ticket you created
 3. Confirmation that the ticket remained after restart
 4. Answers to the reflection questions
+
+## Short note
+
+**Test steps:**
+
+1. Confirmed MongoDB was already running on Windows (reachable from WSL via mirrored networking on `localhost:27017`).
+2. Started the Spring Boot app with `MONGODB_USERNAME=support_desk_app MONGODB_PASSWORD=support_desk_app mvn spring-boot:run`.
+3. Created a new ticket: `POST /api/tickets` with title "Printer not responding" → got back `201 Created`.
+4. `GET /api/tickets` showed 3 tickets total, including the new one.
+5. Fully killed the Spring Boot process (`kill -9`, port confirmed free).
+6. Restarted the app the same way.
+7. `GET /api/tickets` again → same 3 tickets returned, identical data.
+8. `GET /api/tickets/6a50b3d29212a9c740c488b6` → `200 OK` with the exact ticket I created before the restart.
+
+**ID of the ticket created:** `6a50b3d29212a9c740c488b6`
