@@ -12,3 +12,29 @@ GET http://localhost:8080/api/tickets/6a508bce8515f64f3689e4e0
 
 ### Get missing ticket
 GET http://localhost:8080/api/tickets/000000000000000000000000
+
+
+### Create a valid ticket
+POST http://localhost:8080/api/tickets
+Content-Type: application/json
+
+{
+  "title": "Cannot access email",
+  "description": "User cannot login to company email account.",
+  "category": "Email",
+  "priority": "HIGH",
+  "createdBy": "amir@example.com"
+}
+
+
+### Create an invalid ticket
+POST http://localhost:8080/api/tickets
+Content-Type: application/json
+
+{
+  "title": "",
+  "description": "",
+  "category": "",
+  "priority": "",
+  "createdBy": ""
+}
