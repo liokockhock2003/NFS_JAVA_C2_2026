@@ -18,6 +18,18 @@ GET http://localhost:8080/api/tickets?priority=HIGH
 GET http://localhost:8080/api/tickets?category=Email
 
 
+### Get paged tickets (page 0, default sort by createdAt desc)
+GET http://localhost:8080/api/tickets/paged?page=0&size=2
+
+
+### Get paged tickets (page 1)
+GET http://localhost:8080/api/tickets/paged?page=1&size=2
+
+
+### Get paged tickets sorted by title ascending
+GET http://localhost:8080/api/tickets/paged?page=0&size=5&sortBy=title&direction=asc
+
+
 ### Get one ticket
 # Replace the ID below with an actual ID returned by GET /api/tickets
 GET http://localhost:8080/api/tickets/REPLACE_WITH_REAL_ID
