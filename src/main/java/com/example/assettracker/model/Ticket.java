@@ -1,6 +1,7 @@
 package com.example.assettracker.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "tickets")
@@ -10,10 +11,20 @@ public class Ticket {
     private String id;
     private String title;
     private String description;
+
+    @Indexed
     private String category;
+
+    @Indexed
     private String priority;
+
+    @Indexed
     private String status;
+
+    @Indexed
     private String createdBy;
+
+    @Indexed
     private String createdAt;
 
     public Ticket() {

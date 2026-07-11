@@ -6,6 +6,8 @@ import com.example.assettracker.exception.ResourceNotFoundException;
 import com.example.assettracker.model.Ticket;
 import com.example.assettracker.repository.TicketRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,8 @@ import java.util.List;
 @Service
 public class TicketService {
 
+    private static final Logger logger = LoggerFactory.getLogger(TicketService.class);
+
     private final TicketRepository ticketRepository;
 
     public TicketService(TicketRepository ticketRepository) {
@@ -25,6 +29,8 @@ public class TicketService {
     }
 
     public List<TicketResponse> getTickets(String status, String priority, String category) {
+        logger.info("Fetching tickets with status={}, priority={}, category={}", status, priority, category);
+
         List<Ticket> tickets;
 
         if (status != null) {
@@ -37,12 +43,16 @@ public class TicketService {
             tickets = ticketRepository.findAll();
         }
 
+        logger.info("Found {} ticket(s)", tickets.size());
+
         return tickets.stream()
                 .map(this::toResponse)
                 .toList();
     }
 
     public Page<TicketResponse> getPagedTickets(int page, int size, String sortBy, String direction) {
+        logger.info("Fetching paged tickets page={}, size={}, sortBy={}, direction={}", page, size, sortBy, direction);
+
         Sort.Direction sortDirection = "asc".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
 
@@ -69,6 +79,8 @@ public class TicketService {
         );
 
         Ticket savedTicket = ticketRepository.save(ticket);
+        logger.info("Created ticket id={}, category={}, priority={}", savedTicket.getId(), savedTicket.getCategory(), savedTicket.getPriority());
+
         return toResponse(savedTicket);
     }
 
