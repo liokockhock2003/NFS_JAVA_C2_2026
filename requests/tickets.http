@@ -1,0 +1,53 @@
+### Health check
+GET http://localhost:8080/api/health
+
+
+### Get all tickets from MongoDB
+GET http://localhost:8080/api/tickets
+
+
+### Get tickets filtered by status
+GET http://localhost:8080/api/tickets?status=OPEN
+
+
+### Get tickets filtered by priority
+GET http://localhost:8080/api/tickets?priority=HIGH
+
+
+### Get tickets filtered by category
+GET http://localhost:8080/api/tickets?category=Email
+
+
+### Get one ticket
+# Replace the ID below with an actual ID returned by GET /api/tickets
+GET http://localhost:8080/api/tickets/REPLACE_WITH_REAL_ID
+
+
+### Get missing ticket
+GET http://localhost:8080/api/tickets/000000000000000000000000
+
+
+### Create a valid ticket
+POST http://localhost:8080/api/tickets
+Content-Type: application/json
+
+{
+  "title": "Cannot access email",
+  "description": "User cannot login to company email account.",
+  "category": "Email",
+  "priority": "HIGH",
+  "createdBy": "amir@example.com"
+}
+
+
+### Create an invalid ticket
+POST http://localhost:8080/api/tickets
+Content-Type: application/json
+
+{
+  "title": "",
+  "description": "",
+  "category": "",
+  "priority": "",
+  "createdBy": ""
+}
