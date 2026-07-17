@@ -1,0 +1,73 @@
+### 1. Health endpoint is public -> expect 200
+GET http://localhost:8080/api/health
+
+
+### 2. Ticket endpoint without token -> expect 401
+GET http://localhost:8080/api/tickets
+
+
+### 3. Register user -> expect 201 with a token
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Amir Hafiz",
+  "email": "amir@example.com",
+  "password": "password123"
+}
+
+
+### 4. Login user -> expect 200 with a token
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "amir@example.com",
+  "password": "password123"
+}
+
+
+### 5. Ticket endpoint with USER token -> expect 200
+# Replace TOKEN below with the token returned from request 3 or 4
+GET http://localhost:8080/api/tickets
+Authorization: Bearer REPLACE_WITH_USER_TOKEN
+
+
+### 6. Create ticket with USER token -> expect 403
+# Replace TOKEN below with the same USER token as request 5
+POST http://localhost:8080/api/tickets
+Authorization: Bearer REPLACE_WITH_USER_TOKEN
+Content-Type: application/json
+
+{
+  "title": "Cannot access email",
+  "description": "User cannot login to company email account.",
+  "category": "Email",
+  "priority": "HIGH",
+  "createdBy": "amir@example.com"
+}
+
+
+### 7. Login admin -> expect 200 with a token
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "Admin@12345"
+}
+
+
+### 8. Create ticket with ADMIN token -> expect 201
+# Replace TOKEN below with the token returned from request 7
+POST http://localhost:8080/api/tickets
+Authorization: Bearer REPLACE_WITH_ADMIN_TOKEN
+Content-Type: application/json
+
+{
+  "title": "Cannot access email",
+  "description": "User cannot login to company email account.",
+  "category": "Email",
+  "priority": "HIGH",
+  "createdBy": "amir@example.com"
+}
