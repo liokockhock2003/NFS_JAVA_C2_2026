@@ -3,6 +3,7 @@ package com.example.assettracker.exception;
 import com.example.assettracker.dto.ApiErrorResponse;
 import com.example.assettracker.dto.FieldErrorDetail;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -39,5 +40,21 @@ public class GlobalExceptionHandler {
                 .toList();
 
         return new ApiErrorResponse("Validation failed", errors);
+    }
+
+    // Map DuplicateResourceException -> 409 Conflict (e.g. duplicate email on register).
+    @ExceptionHandler(DuplicateResourceException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiErrorResponse handleDuplicateResource(DuplicateResourceException exception) {
+        return new ApiErrorResponse(exception.getMessage());
+    }
+
+    // Map authentication failures (e.g. wrong password on login) -> 401 Unauthorized.
+    // A generic message is used deliberately so callers cannot tell whether the
+    // email exists or the password was wrong (avoids user enumeration).
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ApiErrorResponse handleAuthenticationFailure(AuthenticationException exception) {
+        return new ApiErrorResponse("Invalid email or password");
     }
 }
