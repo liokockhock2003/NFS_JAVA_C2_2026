@@ -67,3 +67,5 @@ Authorization: Bearer {{token}}
 ## Reflection Question
 
 Why is a grouped report endpoint better than asking the frontend to download all tickets and count them manually?
+
+A grouped report endpoint pushes the counting work down to the database, which is exactly where it belongs. MongoDB's aggregation pipeline groups and counts documents server-side and only sends back a handful of small summary rows (one per status) — regardless of whether there are 10 tickets or 10 million. If the frontend had to count manually, it would need to download every single ticket document over the network just to compute a count, which wastes bandwidth, memory, and time, and gets dramatically worse as the dataset grows. It also means the counting logic (and any future changes to it, like adding a new status) lives in one place on the backend instead of being duplicated across every frontend client that needs the same summary.
