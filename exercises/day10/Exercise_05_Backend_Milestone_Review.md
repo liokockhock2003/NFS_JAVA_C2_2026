@@ -11,23 +11,23 @@ Your task is to review your Support Desk Ticket API and prove that the backend i
 Tick each item once completed:
 
 ```text
-[ ] Project runs successfully
-[ ] MongoDB connection works
-[ ] Ticket model uses @Document and @Id
-[ ] TicketRepository extends MongoRepository
-[ ] Basic CRUD endpoints work
-[ ] Filtering works
-[ ] Pagination works
-[ ] Sorting works
-[ ] Duplicate or validation errors return clear responses
-[ ] Register endpoint works
-[ ] Login endpoint returns JWT
-[ ] Protected endpoints reject missing token
-[ ] Protected endpoints accept valid token
-[ ] Versioned /api/v1 routes exist
-[ ] Report endpoint works
-[ ] API documentation endpoint exists
-[ ] .http file contains test evidence
+[x] Project runs successfully
+[x] MongoDB connection works
+[x] Ticket model uses @Document and @Id
+[x] TicketRepository extends MongoRepository
+[x] Basic CRUD endpoints work
+[x] Filtering works
+[x] Pagination works
+[x] Sorting works
+[x] Duplicate or validation errors return clear responses
+[x] Register endpoint works
+[x] Login endpoint returns JWT
+[x] Protected endpoints reject missing token
+[x] Protected endpoints accept valid token
+[x] Versioned /api/v1 routes exist
+[x] Report endpoint works
+[x] API documentation endpoint exists
+[x] .http file contains test evidence
 ```
 
 ## Submission
@@ -43,3 +43,5 @@ Submit:
 ## Reflection Question
 
 What is one thing you would improve before connecting this backend to React?
+
+**CORS configuration.** I checked `SecurityConfig.java` and there is currently no `.cors(...)` setup at all. A React dev server runs on a different origin (e.g. `http://localhost:5173` for Vite or `http://localhost:3000` for Create React App) than this backend (`http://localhost:8080`), so without explicit CORS configuration, every request from the React app — including the login/register calls — will be blocked by the browser's same-origin policy before it even reaches the controller. This would be the very first blocker encountered the moment frontend integration starts, so it's the highest-priority fix before that work begins.
