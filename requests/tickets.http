@@ -73,3 +73,12 @@ GET http://localhost:8080/api/v1/reports/tickets-by-status
 ### Ticket report by status, with token -> expect 200 + grouped counts
 GET http://localhost:8080/api/v1/reports/tickets-by-status
 Authorization: Bearer REPLACE_WITH_USER_TOKEN
+
+
+### Ticket report by priority, without token -> expect 401
+GET http://localhost:8080/api/v1/reports/tickets-by-priority
+
+
+### Ticket report by priority, with token -> expect 200 + grouped counts
+GET http://localhost:8080/api/v1/reports/tickets-by-priority
+Authorization: Bearer REPLACE_WITH_USER_TOKEN

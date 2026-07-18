@@ -51,3 +51,5 @@ Authorization: Bearer {{token}}
 ## Reflection Question
 
 How could this report help a support manager decide where to assign staff?
+
+A quick count of HIGH vs MEDIUM vs LOW tickets tells a manager where the pressure actually is without needing to read through every individual ticket. If HIGH-priority tickets are piling up, that's a signal to pull more staff onto them immediately, even if the total ticket count looks manageable overall. Tracked over time, this same report also shows whether staffing decisions are working — e.g. if the HIGH count shrinks after adding more agents, or keeps growing despite it, the manager gets a fast, objective signal instead of relying on gut feeling about how busy the team "seems."

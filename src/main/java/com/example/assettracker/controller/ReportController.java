@@ -44,4 +44,9 @@ public class ReportController {
         return ticketReportService.countTicketsByStatus();
     }
 
+    @GetMapping("/tickets-by-priority")
+    public List<ReportCountResponse> getTicketsByPriority() {
+        return ticketReportService.countTicketsByPriority();
+    }
+
 }
