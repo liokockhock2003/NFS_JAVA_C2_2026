@@ -28,7 +28,13 @@ public class ApiDocsController {
                         new ApiEndpointResponse("POST", "/api/v1/assets", "ADMIN", "Create a new asset."),
                         new ApiEndpointResponse("GET", "/api/v1/reports/assets-by-status", "USER or ADMIN", "Count assets grouped by status."),
                         new ApiEndpointResponse("GET", "/api/v1/reports/assets-by-category", "USER or ADMIN", "Count assets grouped by category."),
-                        new ApiEndpointResponse("GET", "/api/v1/reports/assets-by-location", "USER or ADMIN", "Count assets grouped by location.")
+                        new ApiEndpointResponse("GET", "/api/v1/reports/assets-by-location", "USER or ADMIN", "Count assets grouped by location."),
+                        new ApiEndpointResponse("GET", "/api/v1/tickets", "USER or ADMIN", "List support tickets, optionally filtered by status, priority, or category."),
+                        new ApiEndpointResponse("GET", "/api/v1/tickets/paged", "USER or ADMIN", "List support tickets using pagination and sorting."),
+                        new ApiEndpointResponse("GET", "/api/v1/tickets/{id}", "USER or ADMIN", "Get one support ticket by MongoDB id."),
+                        new ApiEndpointResponse("POST", "/api/v1/tickets", "USER or ADMIN", "Create a new support ticket."),
+                        new ApiEndpointResponse("GET", "/api/v1/reports/tickets-by-status", "USER or ADMIN", "Count support tickets grouped by status."),
+                        new ApiEndpointResponse("GET", "/api/v1/reports/tickets-by-priority", "USER or ADMIN", "Count support tickets grouped by priority.")
                 )
         );
     }

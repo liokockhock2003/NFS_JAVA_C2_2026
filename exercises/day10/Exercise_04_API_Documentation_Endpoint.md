@@ -63,3 +63,5 @@ GET http://localhost:8080/api/docs
 ## Reflection Question
 
 Why is API documentation useful before frontend integration?
+
+It gives frontend developers a single source of truth for exactly what's available — which endpoints exist, what HTTP method each one needs, and who's allowed to call it — without them needing to read backend source code or ask the backend team directly for every detail. This matters especially for the "access" field: a frontend developer building the ticket list screen needs to know upfront that `GET /api/v1/tickets` requires a logged-in USER or ADMIN token, so they build the login flow before the ticket screen, not after discovering a 401 by trial and error. It also reduces back-and-forth between teams and prevents integration surprises late in development, when endpoints turn out to need auth, or expect different fields, than the frontend assumed.
