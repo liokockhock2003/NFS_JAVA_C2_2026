@@ -1,0 +1,66 @@
+### Health check
+GET http://localhost:8080/api/health
+
+
+### Register a user (for testing)
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "V1 Tester",
+  "email": "v1tester@example.com",
+  "password": "password123"
+}
+
+
+### Login as that user
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "v1tester@example.com",
+  "password": "password123"
+}
+
+
+### 1. /api/v1/tickets rejects requests without a token -> expect 401
+GET http://localhost:8080/api/v1/tickets
+
+
+### 2. /api/v1/tickets works with a valid token -> expect 200
+# Replace TOKEN below with the token from the login request above
+GET http://localhost:8080/api/v1/tickets
+Authorization: Bearer REPLACE_WITH_USER_TOKEN
+
+
+### 3. Old /api/tickets endpoint still works -> expect 200
+GET http://localhost:8080/api/tickets
+Authorization: Bearer REPLACE_WITH_USER_TOKEN
+
+
+### POST /api/v1/tickets with USER token -> expect 201 (v1 relaxes this rule)
+POST http://localhost:8080/api/v1/tickets
+Authorization: Bearer REPLACE_WITH_USER_TOKEN
+Content-Type: application/json
+
+{
+  "title": "Laptop is slow",
+  "description": "Laptop takes long to boot.",
+  "category": "Hardware",
+  "priority": "MEDIUM",
+  "createdBy": "v1tester@example.com"
+}
+
+
+### POST /api/tickets (old) with USER token -> expect 403 (old rule unchanged, ADMIN only)
+POST http://localhost:8080/api/tickets
+Authorization: Bearer REPLACE_WITH_USER_TOKEN
+Content-Type: application/json
+
+{
+  "title": "Laptop is slow",
+  "description": "Laptop takes long to boot.",
+  "category": "Hardware",
+  "priority": "MEDIUM",
+  "createdBy": "v1tester@example.com"
+}
