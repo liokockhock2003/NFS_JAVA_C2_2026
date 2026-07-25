@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import Layout from '../components/Layout.jsx';
 import TicketList from '../components/TicketList.jsx';
 import TicketDetail from '../components/TicketDetail.jsx';
 import TicketFilterPanel from '../components/TicketFilterPanel.jsx';
@@ -33,7 +32,7 @@ export default function TicketsPage() {
   }, [filteredTickets, selectedTicket]);
 
   return (
-    <Layout>
+    <>
       <TicketFilterPanel
         searchText={searchText}
         statusFilter={statusFilter}
@@ -49,6 +48,6 @@ export default function TicketsPage() {
         onSelectTicket={setSelectedTicket}
       />
       <TicketDetail ticket={selectedTicket} />
-    </Layout>
+    </>
   );
 }
