@@ -16,7 +16,7 @@ export default function LoginPage() {
   const redirectTo = location.state?.from?.pathname || '/app/dashboard';
 
   if (isAuthenticated) {
-    return <Navigate to="/app/dashboard" replace />;
+    return <Navigate to={redirectTo} replace />;
   }
 
   async function handleSubmit(event) {
