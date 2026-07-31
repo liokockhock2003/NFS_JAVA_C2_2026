@@ -1,9 +1,30 @@
-import { Link } from 'react-router';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router';
 import TicketFormWizard, { emptyTicketForm } from '../components/TicketFormWizard.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
+import { createTicket } from '../services/api.js';
 
 export default function TicketFormPage() {
-  function handleSubmit(payload) {
-    console.log('Ticket form values', payload);
+  const navigate = useNavigate();
+  const { token, user } = useAuth();
+  const [saving, setSaving] = useState(false);
+  const [serverError, setServerError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+  async function handleSubmit(payload) {
+    try {
+      setSaving(true);
+      setServerError('');
+      setSuccessMessage('');
+
+      await createTicket(token, { ...payload, createdBy: user?.email });
+      setSuccessMessage('Ticket created successfully.');
+    } catch (err) {
+      setServerError(err.message || 'Could not save ticket.');
+      console.error(err);
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -16,6 +37,11 @@ export default function TicketFormPage() {
         </div>
         <div className="action-row">
           <Link className="button-link secondary" to="/app/tickets">Back to Tickets</Link>
+          {successMessage && (
+            <button type="button" className="button-link" onClick={() => navigate('/app/tickets')}>
+              View Tickets
+            </button>
+          )}
         </div>
       </section>
 
@@ -23,6 +49,9 @@ export default function TicketFormPage() {
         mode="create"
         initialValues={emptyTicketForm}
         onSubmit={handleSubmit}
+        saving={saving}
+        serverError={serverError}
+        successMessage={successMessage}
       />
     </>
   );
