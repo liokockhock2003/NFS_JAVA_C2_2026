@@ -57,6 +57,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/assets").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/assets/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/reports/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/tickets", "/api/tickets/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/tickets").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/tickets", "/api/v1/tickets/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/tickets").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/tickets/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
