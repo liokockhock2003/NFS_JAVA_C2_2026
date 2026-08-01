@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router';
 import AppShell from './components/AppShell.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import { TicketDataProvider } from './context/TicketDataContext.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import TicketsPage from './pages/TicketsPage.jsx';
@@ -15,7 +16,9 @@ export default function App() {
         path="/app"
         element={
           <ProtectedRoute>
-            <AppShell />
+            <TicketDataProvider>
+              <AppShell />
+            </TicketDataProvider>
           </ProtectedRoute>
         }
       >
