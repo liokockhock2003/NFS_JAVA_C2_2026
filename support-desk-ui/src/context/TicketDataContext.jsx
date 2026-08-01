@@ -1,5 +1,5 @@
-import { createContext, useCallback, useContext, useMemo, useReducer } from 'react';
-import { fetchTickets } from '../services/api.js';
+import { createContext, useCallback, useContext, useMemo, useReducer, useRef } from 'react';
+import { fetchPagedTickets } from '../services/api.js';
 import { filterTickets } from '../utils/tickets.js';
 import { useAuth } from './AuthContext.jsx';
 
@@ -24,17 +24,32 @@ const initialState = {
   }
 };
 
+function toPageInfo(data, params) {
+  return {
+    page: data.number ?? params.page,
+    size: data.size ?? params.size,
+    sortBy: params.sortBy,
+    direction: params.direction,
+    totalPages: data.totalPages ?? 0,
+    totalElements: data.totalElements ?? 0
+  };
+}
+
 function ticketReducer(state, action) {
   switch (action.type) {
     case 'LOAD_START':
+      // Apply the requested params immediately so the controls reflect the
+      // pending request. Otherwise a second change reads stale values and
+      // overwrites the first one.
       return {
         ...state,
         loading: true,
-        error: ''
+        error: '',
+        pageInfo: { ...state.pageInfo, ...action.params }
       };
 
     case 'LOAD_SUCCESS': {
-      const tickets = action.tickets ?? [];
+      const tickets = action.data.content ?? [];
       const selectedStillVisible = tickets.some((ticket) => ticket.id === state.selectedTicketId);
       const selectedTicketId = selectedStillVisible ? state.selectedTicketId : tickets[0]?.id ?? '';
 
@@ -44,10 +59,7 @@ function ticketReducer(state, action) {
         selectedTicketId,
         loading: false,
         error: '',
-        pageInfo: {
-          ...state.pageInfo,
-          totalElements: tickets.length
-        }
+        pageInfo: toPageInfo(action.data, action.params)
       };
     }
 
@@ -84,20 +96,45 @@ function ticketReducer(state, action) {
 export function TicketDataProvider({ children }) {
   const { token } = useAuth();
   const [state, dispatch] = useReducer(ticketReducer, initialState);
+  const requestIdRef = useRef(0);
 
-  const loadTickets = useCallback(async () => {
-    dispatch({ type: 'LOAD_START' });
+  const loadTicketsPage = useCallback(async (overrides = {}) => {
+    const params = {
+      page: overrides.page ?? state.pageInfo.page,
+      size: overrides.size ?? state.pageInfo.size,
+      sortBy: overrides.sortBy ?? state.pageInfo.sortBy,
+      direction: overrides.direction ?? state.pageInfo.direction
+    };
+
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
+
+    dispatch({ type: 'LOAD_START', params });
 
     try {
-      const tickets = await fetchTickets(token);
-      dispatch({ type: 'LOAD_SUCCESS', tickets });
+      const data = await fetchPagedTickets(token, params);
+
+      // Ignore a slow response that a newer request has already superseded.
+      if (requestId !== requestIdRef.current) {
+        return;
+      }
+
+      dispatch({ type: 'LOAD_SUCCESS', data, params });
     } catch (error) {
+      if (requestId !== requestIdRef.current) {
+        return;
+      }
+
       dispatch({
         type: 'LOAD_ERROR',
         message: error.message || 'Could not load protected ticket data.'
       });
     }
-  }, [token]);
+  }, [state.pageInfo, token]);
+
+  const refreshTickets = useCallback(() => {
+    return loadTicketsPage();
+  }, [loadTicketsPage]);
 
   const setSearchText = useCallback((value) => {
     dispatch({ type: 'SET_SEARCH_TEXT', value });
@@ -125,12 +162,13 @@ export function TicketDataProvider({ children }) {
       ...state,
       visibleTickets,
       selectedTicket,
-      loadTickets,
+      loadTicketsPage,
+      refreshTickets,
       setSearchText,
       setStatusFilter,
       selectTicket
     }),
-    [state, visibleTickets, selectedTicket, loadTickets, setSearchText, setStatusFilter, selectTicket]
+    [state, visibleTickets, selectedTicket, loadTicketsPage, refreshTickets, setSearchText, setStatusFilter, selectTicket]
   );
 
   return <TicketDataContext.Provider value={value}>{children}</TicketDataContext.Provider>;

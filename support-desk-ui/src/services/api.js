@@ -1,4 +1,4 @@
-import { apiRequest } from './httpClient.js';
+import { apiRequest, buildQueryString } from './httpClient.js';
 
 export async function fetchApiInfo() {
   return apiRequest('/api/v1/info');
@@ -13,6 +13,17 @@ export async function loginRequest(email, password) {
 
 export async function fetchTickets(token) {
   return apiRequest('/api/v1/tickets', { token });
+}
+
+export async function fetchPagedTickets(token, params) {
+  const queryString = buildQueryString({
+    page: params.page,
+    size: params.size,
+    sortBy: params.sortBy,
+    direction: params.direction
+  });
+
+  return apiRequest(`/api/v1/tickets/paged?${queryString}`, { token });
 }
 
 export async function fetchTicketById(id, token) {
