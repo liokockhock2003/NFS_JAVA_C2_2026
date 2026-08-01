@@ -21,8 +21,14 @@ const initialState = {
   filters: {
     searchText: '',
     statusFilter: 'ALL'
-  }
+  },
+  cache: {},
+  cacheMessage: 'No page loaded yet.'
 };
+
+function makeCacheKey(params) {
+  return `${params.page}|${params.size}|${params.sortBy}|${params.direction}`;
+}
 
 function toPageInfo(data, params) {
   return {
@@ -45,7 +51,8 @@ function ticketReducer(state, action) {
         ...state,
         loading: true,
         error: '',
-        pageInfo: { ...state.pageInfo, ...action.params }
+        pageInfo: { ...state.pageInfo, ...action.params },
+        cacheMessage: 'Fetching from backend...'
       };
 
     case 'LOAD_SUCCESS': {
@@ -53,13 +60,21 @@ function ticketReducer(state, action) {
       const selectedStillVisible = tickets.some((ticket) => ticket.id === state.selectedTicketId);
       const selectedTicketId = selectedStillVisible ? state.selectedTicketId : tickets[0]?.id ?? '';
 
+      // A cache hit reuses what is already stored, so only a backend
+      // response needs to be written into the cache.
+      const cache = action.fromCache
+        ? state.cache
+        : { ...state.cache, [action.cacheKey]: action.data };
+
       return {
         ...state,
         tickets,
         selectedTicketId,
         loading: false,
         error: '',
-        pageInfo: toPageInfo(action.data, action.params)
+        pageInfo: toPageInfo(action.data, action.params),
+        cache,
+        cacheMessage: action.fromCache ? 'Loaded from cache' : 'Fetched from backend'
       };
     }
 
@@ -67,7 +82,8 @@ function ticketReducer(state, action) {
       return {
         ...state,
         loading: false,
-        error: action.message
+        error: action.message,
+        cacheMessage: 'Could not load data.'
       };
 
     case 'SET_SEARCH_TEXT':
@@ -109,6 +125,20 @@ export function TicketDataProvider({ children }) {
     const requestId = requestIdRef.current + 1;
     requestIdRef.current = requestId;
 
+    const cacheKey = makeCacheKey(params);
+    const cachedPage = state.cache[cacheKey];
+
+    if (cachedPage && !overrides.force) {
+      dispatch({
+        type: 'LOAD_SUCCESS',
+        data: cachedPage,
+        params,
+        cacheKey,
+        fromCache: true
+      });
+      return;
+    }
+
     dispatch({ type: 'LOAD_START', params });
 
     try {
@@ -119,7 +149,7 @@ export function TicketDataProvider({ children }) {
         return;
       }
 
-      dispatch({ type: 'LOAD_SUCCESS', data, params });
+      dispatch({ type: 'LOAD_SUCCESS', data, params, cacheKey, fromCache: false });
     } catch (error) {
       if (requestId !== requestIdRef.current) {
         return;
@@ -130,10 +160,10 @@ export function TicketDataProvider({ children }) {
         message: error.message || 'Could not load protected ticket data.'
       });
     }
-  }, [state.pageInfo, token]);
+  }, [state.cache, state.pageInfo, token]);
 
   const refreshTickets = useCallback(() => {
-    return loadTicketsPage();
+    return loadTicketsPage({ force: true });
   }, [loadTicketsPage]);
 
   const setSearchText = useCallback((value) => {

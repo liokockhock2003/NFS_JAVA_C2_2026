@@ -22,6 +22,7 @@ export default function TicketsPage() {
     error,
     pageInfo,
     filters,
+    cacheMessage,
     loadTicketsPage,
     refreshTickets,
     setSearchText,
@@ -60,6 +61,7 @@ export default function TicketsPage() {
 
       <TicketDataControls
         pageInfo={pageInfo}
+        cacheMessage={cacheMessage}
         loading={loading}
         onRefresh={refreshTickets}
         onPageSizeChange={(size) => loadTicketsPage({ page: 0, size })}

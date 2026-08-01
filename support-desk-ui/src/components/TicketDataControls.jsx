@@ -1,5 +1,6 @@
 export default function TicketDataControls({
   pageInfo,
+  cacheMessage,
   loading,
   onRefresh,
   onPageSizeChange,
@@ -9,8 +10,8 @@ export default function TicketDataControls({
     <section className="card">
       <div className="section-heading">
         <p className="eyebrow">Data layer</p>
-        <h2>Server pagination controls</h2>
-        <p>Page size, sort field and sort direction are sent to the paged backend endpoint.</p>
+        <h2>Server pagination and cache controls</h2>
+        <p className="cache-message">{cacheMessage}</p>
       </div>
 
       <div className="action-row">
