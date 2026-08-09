@@ -161,6 +161,12 @@ dist/
 build/
 .vite/
 
+# Playwright test artifacts
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+
 # Frontend coverage and cache
 coverage/
 .nyc_output/
