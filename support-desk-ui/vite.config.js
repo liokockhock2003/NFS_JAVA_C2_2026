@@ -11,5 +11,14 @@ export default defineConfig({
         changeOrigin: true
       }
     }
+  },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './src/test/setup.js',
+    css: true,
+    include: ['src/**/*.test.{js,jsx}'],
+    // Playwright owns e2e/, so Vitest must not try to run those specs.
+    exclude: ['node_modules', 'dist', 'e2e/**', 'playwright.config.js']
   }
 });
