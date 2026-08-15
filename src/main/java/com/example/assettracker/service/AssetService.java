@@ -86,31 +86,23 @@ public class AssetService {
     public AssetResponse getAssetById(String id) {
         logger.info("Fetching asset by id={}", id);
 
-        Asset asset = assetRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Asset " + id + " was not found"));
-
-        return toResponse(asset);
+        return toResponse(findAssetOrThrow(id));
     }
 
     public AssetResponse createAsset(CreateAssetRequest request) {
-        String assetTag = request.getAssetTag().trim();
-        String serialNumber = request.getSerialNumber().trim();
+        String assetTag = normalizeRequired(request.getAssetTag());
+        String serialNumber = normalizeRequired(request.getSerialNumber());
 
-        if (assetRepository.existsByAssetTag(assetTag)) {
-            throw new DuplicateResourceException("Asset tag already exists: " + assetTag);
-        }
-
-        if (assetRepository.existsBySerialNumber(serialNumber)) {
-            throw new DuplicateResourceException("Serial number already exists: " + serialNumber);
-        }
+        verifyAssetTagIsUnique(assetTag, null);
+        verifySerialNumberIsUnique(serialNumber, null);
 
         Asset asset = new Asset(
                 assetTag,
-                request.getName().trim(),
-                request.getCategory().trim(),
+                normalizeRequired(request.getName()),
+                normalizeRequired(request.getCategory()),
                 serialNumber,
                 "AVAILABLE",
-                request.getLocation().trim(),
+                normalizeRequired(request.getLocation()),
                 null
         );
 
@@ -121,33 +113,56 @@ public class AssetService {
     public AssetResponse updateAsset(String id, UpdateAssetRequest request) {
         logger.info("Updating asset id={}", id);
 
-        Asset asset = assetRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Asset " + id + " was not found"));
+        Asset asset = findAssetOrThrow(id);
 
-        String assetTag = request.getAssetTag().trim();
-        String serialNumber = request.getSerialNumber().trim();
-        String status = request.getStatus().trim().toUpperCase();
+        String assetTag = normalizeRequired(request.getAssetTag());
+        String serialNumber = normalizeRequired(request.getSerialNumber());
+        String status = normalizeStatus(request.getStatus());
 
-        validateStatus(status);
-
-        if (!asset.getAssetTag().equalsIgnoreCase(assetTag) && assetRepository.existsByAssetTag(assetTag)) {
-            throw new DuplicateResourceException("Asset tag already exists: " + assetTag);
-        }
-
-        if (!asset.getSerialNumber().equalsIgnoreCase(serialNumber) && assetRepository.existsBySerialNumber(serialNumber)) {
-            throw new DuplicateResourceException("Serial number already exists: " + serialNumber);
-        }
+        verifyAssetTagIsUnique(assetTag, asset);
+        verifySerialNumberIsUnique(serialNumber, asset);
 
         asset.setAssetTag(assetTag);
-        asset.setName(request.getName().trim());
-        asset.setCategory(request.getCategory().trim());
+        asset.setName(normalizeRequired(request.getName()));
+        asset.setCategory(normalizeRequired(request.getCategory()));
         asset.setSerialNumber(serialNumber);
         asset.setStatus(status);
-        asset.setLocation(request.getLocation().trim());
+        asset.setLocation(normalizeRequired(request.getLocation()));
         asset.setAssignedTo(normalizeOptional(request.getAssignedTo()));
 
         Asset savedAsset = assetRepository.save(asset);
         return toResponse(savedAsset);
+    }
+
+    private Asset findAssetOrThrow(String id) {
+        return assetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Asset " + id + " was not found"));
+    }
+
+    private void verifyAssetTagIsUnique(String assetTag, Asset current) {
+        boolean unchanged = current != null && current.getAssetTag().equalsIgnoreCase(assetTag);
+
+        if (!unchanged && assetRepository.existsByAssetTag(assetTag)) {
+            throw new DuplicateResourceException("Asset tag already exists: " + assetTag);
+        }
+    }
+
+    private void verifySerialNumberIsUnique(String serialNumber, Asset current) {
+        boolean unchanged = current != null && current.getSerialNumber().equalsIgnoreCase(serialNumber);
+
+        if (!unchanged && assetRepository.existsBySerialNumber(serialNumber)) {
+            throw new DuplicateResourceException("Serial number already exists: " + serialNumber);
+        }
+    }
+
+    private String normalizeRequired(String value) {
+        return value.trim();
+    }
+
+    private String normalizeStatus(String status) {
+        String normalized = status.trim().toUpperCase();
+        validateStatus(normalized);
+        return normalized;
     }
 
     private void validatePageRequest(int page, int size, String sortBy, String direction) {
