@@ -7,6 +7,7 @@
 *.env
 *.pem
 *.key
+secrets/
 application-local.properties
 
 # Build output
