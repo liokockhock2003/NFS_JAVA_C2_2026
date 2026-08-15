@@ -1,0 +1,31 @@
+# Keep the build context small and secret-free.
+
+# Secrets / local env — must never enter the image context
+.env
+.env.*
+!.env.example
+*.env
+*.pem
+*.key
+application-local.properties
+
+# Build output
+target/
+*.jar
+*.log
+
+# Frontend (backend image doesn't need it)
+frontend/
+node_modules/
+
+# Git / IDE / OS noise
+.git/
+.gitignore
+.idea/
+.vscode/
+*.iml
+.DS_Store
+
+# Docs / exercises not needed to run the app
+exercises/
+docs/
